@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Earthquake Visualization</title>
+		<style>
+			body, html {
+				height: 100%;
+				/* background-image: url("unnamed.jpg"); */
+				color: #e8e8e8;
+				background-color: #222222;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Earthquakes Visualization by Location and Magnitude</h1>
+		<svg id="svg" width="1600" height="800"></svg>
+
+		<script src="https://d3js.org/d3.v7.min.js"></script>
+		<script>
+			
+			d3.csv('earthquakes.csv')
+				.then(data => {
+					const colorScale = d3.scaleOrdinal()
+						.domain(data.map(d => d.Magnitude))
+						.range(['#af7dff', '#7d7dff', '#7dbcff', '#7dfbff', '#7dffaf', '#99ff7d', '#f2ff7d', '#ffc47d', '#ff7d7d', '#ff7dde'])
+
+					d3.select('#svg')
+						.style('border', '1px solid')
+						.selectAll('circle')
+						.data(data)
+						.enter()
+						.append('circle')
+						.attr('cx', d => parseFloat(d.Longitude) * 4 + 800)
+						.attr('cy', d => parseFloat(d.Latitude) * 4.5 + 400)
+						.attr('r', d => parseInt(d.Magnitude) * 2)
+						.attr('fill', d => colorScale(d.Magnitude))
+						.attr('opacity', 0.25)
+				})
+		</script>
+	</body>
+</html>
